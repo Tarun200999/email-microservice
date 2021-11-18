@@ -8,16 +8,17 @@ var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi()
 const sendQueryEmail = async (
   email,
   message,
-  companyName,
-  name,
+  firstname,
+  lastname,
+  phone,
   emailTo,
   res
 ) => {
   var sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail()
   sendSmtpEmail = {
     sender: {
-      name: 'ERAM CAPITAL',
-      email: 'noreply@eramcapital.com',
+      name: 'Moorup',
+      email: 'noreply@moorup.com',
     },
     to: [
       {
@@ -25,9 +26,13 @@ const sendQueryEmail = async (
         name: 'Admin',
       },
     ],
-    subject: `New Query from ${name}`,
+    subject: `New Query from ${firstname + ' ' + lastname}`,
 
-    htmlContent: `<h3>Name : ${name}</h3></br><h3>Email : ${email}</h3></br><h3>Message : ${message}</h3></br><h3>Company Name : ${companyName}</h3>`,
+    htmlContent: `<h3>Name : ${
+      firstname + ' ' + lastname
+    }</h3></br><h3>Email : ${email}</h3></br><h3>Message : ${message}</h3></br><h3>Phone : ${
+      phone ? phone : 'Not Provided'
+    }</h3>`,
   }
 
   apiInstance.sendTransacEmail(sendSmtpEmail).then(
@@ -39,7 +44,7 @@ const sendQueryEmail = async (
     function (error) {
       console.log(error)
       return res
-        .status(200)
+        .status(400)
         .json({ status: false, error: 'Error in sending email t admin' })
     }
   )

@@ -16,9 +16,13 @@ app.get('/', (req, res) => {
 })
 
 app.post('/api/contact/email', async (req, res) => {
-  const { email, message, name, companyName, emailTo } = req.body
+  const { email, message, firstname, lastname, phone, emailTo } = req.body
 
-  sendQueryEmail(email, message, companyName, name, emailTo, res)
+  if (!emailTo || !email || !message || !firstname || !lastname) {
+    return res.status(400).json({ status: false, error: 'All fieds required' })
+  }
+
+  sendQueryEmail(email, message, firstname, lastname, phone, emailTo, res)
 })
 
 /* App listning */
