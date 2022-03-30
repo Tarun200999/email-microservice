@@ -1,28 +1,31 @@
 const express = require('express')
+
 const app = express()
 
 const cors = require('cors')
 
-const { sendQueryEmail } = require('./utils/email')
-//port
-const port = process.env.PORT || 8000
+const { sendEmail } = require('./utils/email')
 
-//DB connection
+const port = process.env.PORT || 8000
 
 app.use(cors())
 app.use(express.json())
+
 app.get('/', (req, res) => {
-  res.json({ message: 'MOORUP BACKEND WORKING' })
+  res.json({ message: 'Email Microservice is Working ' })
 })
 
-app.post('/api/contact/email', async (req, res) => {
-  const { email, message, firstname, lastname, phone, emailTo } = req.body
+app.post('/api/send/email', async (req, res) => {
+  const { senderEmail, senderName, receiverEmail, receiverName, emailSubject, emailBody } = req.body
 
-  if (!emailTo || !email || !message || !firstname || !lastname) {
-    return res.status(400).json({ status: false, error: 'All fieds required' })
-  }
+  if (!senderEmail) return res.status(400).json({ error: 'senderEmail Required' })
+  if (!senderName) return res.status(400).json({ error: 'senderName Required' })
+  if (!receiverEmail) return res.status(400).json({ error: 'receiverEmail Required' })
+  if (!receiverName) return res.status(400).json({ error: 'receiverName Required' })
+  if (!emailSubject) return res.status(400).json({ error: 'emailSubject Required' })
+  if (!emailBody) return res.status(400).json({ error: 'emailBody Required' })
 
-  sendQueryEmail(email, message, firstname, lastname, phone, emailTo, res)
+  sendEmail(senderEmail, senderName, receiverEmail, receiverName, emailSubject, emailBody, res)
 })
 
 /* App listning */
